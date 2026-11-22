@@ -1,0 +1,6 @@
+{
+  "name": "Money Manager",
+  "description": "Offline-first personal finance dashboard built with Python, Streamlit, Pandas, Plotly, and Pytest.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
