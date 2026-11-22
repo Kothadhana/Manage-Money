@@ -5,10 +5,12 @@ from __future__ import annotations
 import html
 import math
 from pathlib import Path
+from textwrap import dedent
 
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
+
 
 from services.data_loader import DataBundle, load_all_data
 from services.finance import (
@@ -468,15 +470,18 @@ def render_summary_cards(snapshot: DashboardSnapshot) -> None:
     ]
 
     card_html_parts = []
+
     for card in cards:
         card_html_parts.append(
-            f"""
-            <div class="mm-card" style="--card-accent: {card['accent']}; --card-value-color: {card['value_color']};">
-                <p class="mm-card-title">{html.escape(card['title'])}</p>
-                <p class="mm-card-value">{html.escape(card['value'])}</p>
-                <p class="mm-card-caption">{html.escape(card['caption'])}</p>
-            </div>
-            """
+            dedent(
+                f"""
+                <div class="mm-card" style="--mm-card-accent: {card['accent']}; --mm-card-value-color: {card['value_color']};">
+                    <p class="mm-card-title">{html.escape(card['title'])}</p>
+                    <p class="mm-card-value">{html.escape(card['value'])}</p>
+                    <p class="mm-card-caption">{html.escape(card['caption'])}</p>
+                </div>
+                """
+            )
         )
 
     st.markdown(
@@ -658,7 +663,7 @@ def _render_snapshot_rows(
         date_str = pd.Timestamp(row["date"]).strftime("%d %b %Y")
         amount_str = html.escape(format_inr(float(row[value_col])))
         rows_html.append(
-            f"""
+            dedent(f"""
             <div class="mm-list-row">
                 <div>
                     <div class="mm-list-name">{name}</div>
@@ -666,7 +671,7 @@ def _render_snapshot_rows(
                 </div>
                 <div class="mm-list-amount" style="color: {value_color};">{amount_str}</div>
             </div>
-            """
+            """)
         )
     return "".join(rows_html)
 
@@ -688,8 +693,8 @@ def render_balance_breakdowns(snapshot: DashboardSnapshot) -> None:
         empty_message="No loans recorded in data/debts.csv.",
     )
 
-    st.markdown(
-        f"""
+    st.html(
+        dedent(f"""
         <div class="mm-snapshot-grid">
             <div class="mm-section-card">
                 <p class="mm-section-title">Savings Accounts</p>
@@ -702,8 +707,7 @@ def render_balance_breakdowns(snapshot: DashboardSnapshot) -> None:
                 {debt_rows}
             </div>
         </div>
-        """,
-        unsafe_allow_html=True,
+        """),
     )
 
 
